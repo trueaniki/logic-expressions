@@ -1,0 +1,86 @@
+{
+  "childs": [
+    {
+      "parent": "mock",
+      "type": "formula",
+      "childs": [
+        {
+          "type": "var",
+          "value": "A"
+        },
+        {
+          "parent": "mock",
+          "type": "formula",
+          "childs": [
+            {
+              "type": "var",
+              "value": "B"
+            },
+            {
+              "parent": "mock",
+              "type": "formula",
+              "childs": [
+                {
+                  "type": "var",
+                  "value": "C"
+                },
+                {
+                  "parent": "mock",
+                  "type": "formula",
+                  "operator": {
+                    "type": "NOT"
+                  },
+                  "childs": [
+                    {
+                      "type": "var",
+                      "value": "D"
+                    }
+                  ],
+                  "vars": [
+                    {
+                      "type": "var",
+                      "value": "D"
+                    }
+                  ]
+                }
+              ],
+              "operator": {
+                "type": "OR"
+              },
+              "vars": [
+                {
+                  "type": "var",
+                  "value": "C"
+                },
+                {
+                  "type": "var",
+                  "value": "D",
+                  "neg": true
+                }
+              ]
+            }
+          ],
+          "operator": {
+            "type": "AND"
+          },
+          "vars": [
+            {
+              "type": "var",
+              "value": "B"
+            }
+          ]
+        }
+      ],
+      "operator": {
+        "type": "AND"
+      },
+      "vars": [
+        {
+          "type": "var",
+          "value": "A"
+        }
+      ]
+    }
+  ]
+}
+
