@@ -17,6 +17,16 @@ class NotKnfError extends Error {
     }
 }
 
+const uniqueDisjunctions = []
+
+const checkUnique = arr => arr.length === new Set(arr).length
+
+const checkElementary = formula => formula?.childs.every(ch => ch.type !== 'formula')
+
+const exportSubformula = subformula => {
+    return JSON.stringify(subformula, (key, value) => key === 'parent' ? 'mock' : value)
+}
+
 const checkPknf = str => {
     const [parseToken, getParseTree] = Parser()
     const tokens = Lexer(str)
@@ -34,6 +44,9 @@ const checkPknf = str => {
                 // if (node.operator.type === TOKENS.OR) return true
                 if (parent?.operator?.type === TOKENS.OR && node.operator.type !== TOKENS.OR) {
                     throw new NotKnfError('There should be only disjunctions after disjunctions')
+                }
+                if (node?.operator?.type === TOKENS.OR) {
+                    uniqueDisjunctions.push(exportSubformula(node))
                 }
             } else if (node?.operator?.arity === ARITY.UNARY) {
                 if(node?.childs[0].type === 'formula') throw new NotKnfError('Negotiation to subformulas is not allowed')
@@ -54,6 +67,14 @@ const checkPknf = str => {
                     value: node.value,
 
                 })
+            }
+        })
+        preOrderTraversal(parseTree, (node) => {
+            if (node?.operator?.type === TOKENS.OR) {
+                if(checkElementary(node)) {
+                    if(!checkUnique(node.vars))
+                        throw new NotKnfError('Not unique vars in disjunction')
+                }
             }
         })
     } catch (err) {

@@ -1,0 +1,23 @@
+{
+  "name": "logic-expressions",
+  "version": "1.0.0",
+  "description": "",
+  "main": "errors.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Evencaster/logic-expressions.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Evencaster/logic-expressions/issues"
+  },
+  "homepage": "https://github.com/Evencaster/logic-expressions#readme",
+  "dependencies": {
+    "alphabet": "^1.0.0"
+  }
+}
