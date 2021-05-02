@@ -1,3 +1,5 @@
+// Created by Alexey Nikipelov
+
 const readline = require('readline-sync')
 
 // const str = readline.question('Enter formula:\n')

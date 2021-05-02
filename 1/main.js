@@ -1,3 +1,5 @@
+// Created by Alexey Nikipelov
+
 const readline = require('readline-sync')
 const checkPknf = require('./check-pknf')
 

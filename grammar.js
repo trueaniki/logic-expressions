@@ -1,3 +1,5 @@
+// Created by Alexey Nikipelov
+
 const TOKENS = {
     CONST: Symbol('const'),
     SYMBOL: Symbol('symbol'),

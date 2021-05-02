@@ -1,3 +1,5 @@
+// Created by Alexey Nikipelov
+
 const postOrderTraversal = (node, cb) => {
     if(node?.childs) {
         for(let child of node.childs) {

@@ -1,3 +1,5 @@
+// Created by Alexey Nikipelov
+
 const Lexer = require('../lexer')
 const Parser = require('../parser')
 const syntaxCheck = require('../syntax-check')

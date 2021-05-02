@@ -1,3 +1,5 @@
+// Created by Alexey Nikipelov
+
 const alphabet = require('alphabet')
 
 const {

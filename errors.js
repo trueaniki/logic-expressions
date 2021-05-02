@@ -1,3 +1,5 @@
+// Created by Alexey Nikipelov
+
 class UnexpectedSymbolError extends Error {
     constructor(symbol, index) {
         super(`Unexpected symbol ${symbol} at ${index}`)
