@@ -15,6 +15,7 @@ const {IllegalCharacterError} = require('./errors')
 const Lexer = str => {
     const tokens = []
     const chars = str.split('')
+    if(chars.length === 0) throw Error('Zero length input')
     for(let i = 0; i < chars.length; i++) {
         let char = chars[i]
         let nextChar = chars[i+1]
