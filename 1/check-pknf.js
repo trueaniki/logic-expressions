@@ -19,15 +19,25 @@ class NotKnfError extends Error {
     }
 }
 
+class NotPknfError extends Error {
+    constructor(...args) {
+        super(...args)
+    }
+}
+
+const checkUnique = arr => arr.length === new Set(arr).length
+
 const checkPknf = str => {
     const [parseToken, getParseTree] = Parser()
     const tokens = Lexer(str)
     syntaxCheck(tokens)
     tokens.forEach(t => parseToken(t))
     const parseTree = getParseTree()
+    let parentDisjunctions = []
     let parentDisjunction;
     try {
-        preOrderTraversal(parseTree, (node, parent) => { // meta says about parent node operator: true if OR, false if smth else
+        if(tokens.some(t => t.type === TOKENS.CONST)) throw new NotKnfError('Constants not allowed')
+        preOrderTraversal(parseTree, (node, parent) => {
             if (node?.operator?.arity === ARITY.BINARY) {
                 // console.log(node.operator.type)
                 if (node.operator.type === TOKENS.IMPL || node.operator.type === TOKENS.EQ) {
@@ -37,7 +47,7 @@ const checkPknf = str => {
                 if (parent?.operator?.type === TOKENS.OR && node.operator.type !== TOKENS.OR) {
                     throw new NotKnfError('There should be only disjunctions after disjunctions')
                 }
-                if (parent?.operator?.type === TOKENS.AND && node.operator.type !== TOKENS.OR) {
+                if ((parent?.operator?.type === TOKENS.AND && node.operator.type !== TOKENS.OR) || (node.operator.type === TOKENS.OR && !parent)) {
                     parentDisjunction = node;
                     if(!parentDisjunction.vars) parentDisjunction.vars = [];
                 }
@@ -55,7 +65,9 @@ const checkPknf = str => {
                     value: node.childs[0].value,
                     neg: true,
                 })
+                parentDisjunctions.push(parentDisjunction)
             } else if (node?.type === 'var' && parent?.type !== TOKENS.NOT) {
+                if(!parentDisjunction) parentDisjunction = parent
                 if (!parentDisjunction?.vars) {
                     parentDisjunction.vars = []
                 }
@@ -63,11 +75,31 @@ const checkPknf = str => {
                     type: node.type,
                     value: node.value,
                 })
+                parentDisjunctions.push(parentDisjunction)
             }
         })
+
+        const varsSet = new Set()
+
+        parentDisjunctions.forEach(d => {
+            d.vars.forEach(v => varsSet.add(v.value))
+        })
+
+        parentDisjunctions.forEach(d1 => {
+            if(d1.vars.length !== varsSet.length) throw new NotPknfError('Not all vars')
+
+            if(!checkUnique(d1.vars.map(d => d.value))) throw new NotPknfError('Not unique vars')
+
+            parentDisjunctions.forEach(d2 => {
+                if(JSON.stringify(d1.vars.map(d => d.value).sort()) === JSON.stringify(d2.vars.map(d => d.value).sort()))
+                    throw new Error('Not unique disj')
+            })
+
+        })
     } catch (err) {
-        if (err instanceof NotKnfError) return false
-        else throw err
+        // if (err instanceof NotKnfError || err instanceof NotPknfError) return false
+        // else
+        throw err
     }
 
     console.log(JSON.stringify(parseTree, (key, value) => key === 'parent' ? 'mock' : value))
