@@ -3,7 +3,7 @@
 const postOrderTraversal = (node, cb) => {
     if(node?.childs) {
         for(let child of node.childs) {
-            preOrderTraversal(child, cb)
+            postOrderTraversal(child, cb)
         }
     }
     cb(node)
