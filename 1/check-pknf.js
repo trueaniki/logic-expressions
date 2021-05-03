@@ -1,4 +1,6 @@
-// Created by Alexey Nikipelov
+// Лабораторная работа 1 по дисциплине ЛОИС
+// Выполнено студентом группы 821701 БГУИР Никипеловым Алексеем Дмитриевичем
+// Функция проверки на СКНФ
 
 const Lexer = require('../lexer')
 const Parser = require('../parser')
@@ -25,7 +27,7 @@ class NotPknfError extends Error {
     }
 }
 
-const checkUnique = arr => arr.length === new Set(arr).length
+const checkUnique = arr => arr.length === new Set(arr).size
 
 const checkPknf = str => {
     const [parseToken, getParseTree] = Parser()
@@ -36,20 +38,25 @@ const checkPknf = str => {
     let parentDisjunctions = []
     let parentDisjunction;
     try {
-        if(tokens.some(t => t.type === TOKENS.CONST)) throw new NotKnfError('Constants not allowed')
+        if(tokens.some(t => t.type === TOKENS.CONST)) throw new NotKnfError('Constants are not allowed')
         preOrderTraversal(parseTree, (node, parent) => {
             if (node?.operator?.arity === ARITY.BINARY) {
-                // console.log(node.operator.type)
                 if (node.operator.type === TOKENS.IMPL || node.operator.type === TOKENS.EQ) {
                     throw new NotKnfError('Implication and equation are not allowed')
                 }
-                // if (node.operator.type === TOKENS.OR) return true
                 if (parent?.operator?.type === TOKENS.OR && node.operator.type !== TOKENS.OR) {
                     throw new NotKnfError('There should be only disjunctions after disjunctions')
                 }
-                if ((parent?.operator?.type === TOKENS.AND && node.operator.type !== TOKENS.OR) || (node.operator.type === TOKENS.OR && !parent)) {
+
+                // if ((parent?.operator?.type === TOKENS.AND && node.operator.type !== TOKENS.OR) || (node.operator.type === TOKENS.OR && !parent)) {
+                //     parentDisjunction = node;
+                //     if(!parentDisjunction.vars) parentDisjunction.vars = [];
+                //     // parentDisjunctions.push(parentDisjunction)
+                // }
+                if (parent?.operator?.type === TOKENS.AND) {
                     parentDisjunction = node;
                     if(!parentDisjunction.vars) parentDisjunction.vars = [];
+                    parentDisjunctions.push(parentDisjunction)
                 }
                 if(node.operator.type === TOKENS.OR) {
                     node.childs[0].type === 'var' && parentDisjunction.vars.push(node.childs[0])
@@ -65,18 +72,19 @@ const checkPknf = str => {
                     value: node.childs[0].value,
                     neg: true,
                 })
-                parentDisjunctions.push(parentDisjunction)
-            } else if (node?.type === 'var' && parent?.type !== TOKENS.NOT) {
-                if(!parentDisjunction) parentDisjunction = parent
-                if (!parentDisjunction?.vars) {
-                    parentDisjunction.vars = []
-                }
-                parentDisjunction.vars.push({
-                    type: node.type,
-                    value: node.value,
-                })
-                parentDisjunctions.push(parentDisjunction)
+                // parentDisjunctions.push(parentDisjunction)
             }
+            // else if (node?.type === 'var' && parent?.type !== TOKENS.NOT) {
+            //     if(!parentDisjunction) parentDisjunction = parent
+            //     if (!parentDisjunction?.vars) {
+            //         parentDisjunction.vars = []
+            //     }
+            //     parentDisjunction.vars.push({
+            //         type: node.type,
+            //         value: node.value,
+            //     })
+            //     // parentDisjunctions.push(parentDisjunction)
+            // }
         })
 
         const varsSet = new Set()
@@ -84,15 +92,28 @@ const checkPknf = str => {
         parentDisjunctions.forEach(d => {
             d.vars.forEach(v => varsSet.add(v.value))
         })
+        console.log(JSON.stringify(parentDisjunctions, (key, value) => key === 'parent' ? 'mock' : value))
+        parentDisjunctions.filter(d => d.operator.type === TOKENS.OR).forEach(d1 => {
+            if(new Set(d1.vars.map(v=>v.value)).size !== varsSet.size) {
+                // console.log(JSON.stringify(d1, (key, value) => key === 'parent' ? 'mock' : value))
+                console.log(d1.vars)
+                console.log(varsSet)
+                throw new NotPknfError('Not all vars')
+            }
 
-        parentDisjunctions.forEach(d1 => {
-            if(d1.vars.length !== varsSet.length) throw new NotPknfError('Not all vars')
-
-            if(!checkUnique(d1.vars.map(d => d.value))) throw new NotPknfError('Not unique vars')
+            if(!checkUnique(d1.vars.map(d => d.value))) {
+                // console.log(checkUnique(d1.vars.map(d => d.value)))
+                // console.log(d1.vars.map(d => d.value).length)
+                // console.log(new Set(d1.vars.map(d => d.value)).size)
+                throw new NotPknfError('Not unique vars')
+            }
 
             parentDisjunctions.forEach(d2 => {
-                if(JSON.stringify(d1.vars.map(d => d.value).sort()) === JSON.stringify(d2.vars.map(d => d.value).sort()))
-                    throw new Error('Not unique disj')
+                const firstDisjStr = JSON.stringify(d1.vars.map(d => d.neg ? '!' + d.value : d.value).sort())
+                const secondDisjStr = JSON.stringify(d2.vars.map(d => d.neg ? '!' + d.value : d.value).sort())
+                if(firstDisjStr === secondDisjStr && d1 !== d2) {
+                    throw new NotPknfError('Not unique disjunctions')
+                }
             })
 
         })
@@ -102,7 +123,7 @@ const checkPknf = str => {
         throw err
     }
 
-    console.log(JSON.stringify(parseTree, (key, value) => key === 'parent' ? 'mock' : value))
+    // console.log(JSON.stringify(parseTree, (key, value) => key === 'parent' ? 'mock' : value))
 
     return true
 }
