@@ -20,6 +20,9 @@ const syntaxCheck = tokens => {
             if(token === TOKENS.SYMBOL) {
                 if(OPERATORS.includes(nextToken) && nextToken === TOKENS.RPAREN) throw new UnexpectedSymbolError(tokenArr[index + 1], index + 1)
             }
+            if(token === TOKENS.SYMBOL) {
+                if(nextToken === TOKENS.SYMBOL) throw new UnexpectedSymbolError(tokenArr[index + 1], index + 1)
+            }
             if(OPERATORS.includes(token)) {
                 if(!VARS.includes(nextToken) && nextToken !== TOKENS.LPAREN) throw new UnexpectedSymbolError(tokenArr[index + 1], index + 1)
             }
