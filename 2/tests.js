@@ -145,4 +145,9 @@ describe('Testing tautologies', () => {
             assert.isNotOk(checkTautology(('((1/\\A)->B)'))[0])
         })
     })
+    // describe('formula with 21 varibles - maximum', () => {
+    //     it('should not be tautology', () => {
+    //         assert.isNotOk(checkTautology('(((((((((((((((((((A/\\B)/\\C)/\\D)/\\E)/\\F)/\\G)/\\H)/\\J)/\\K)/\\L)/\\M)/\\N)/\\O)/\\P)/\\Q)/\\R)/\\S)/\\T)/\\U)'))
+    //     })
+    // })
 })

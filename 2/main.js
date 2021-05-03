@@ -13,8 +13,9 @@ const readline = require('readline-sync')
 
 const checkTautology = require('./check-tautology')
 
-// const str = readline.question('Enter formula:\n')
-const str = '(!(1/\\(!1)))'
+const str = readline.question('Enter formula:\n')
+// const str = '(((((((((((((((((((A/\\B)/\\C)/\\D)/\\E)/\\F)/\\G)/\\H)/\\J)/\\K)/\\L)/\\M)/\\N)/\\O)/\\P)/\\Q)/\\R)/\\S)/\\T)/\\U)'
+// const str = 'A'
 
 const [result, truthtable] = checkTautology(str)
 

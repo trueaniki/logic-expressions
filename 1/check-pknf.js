@@ -37,6 +37,8 @@ const checkPknf = str => {
     const parseTree = getParseTree()
     let parentDisjunctions = []
     let parentDisjunction;
+    if(!parseTree?.childs[0]?.operator) throw new NotPknfError()
+    // if(parseTree?.childs[0]?.operator.type === TOKENS.AND) throw new NotPknfError()
     try {
         if(tokens.some(t => t.type === TOKENS.CONST)) throw new NotKnfError('Constants are not allowed')
         preOrderTraversal(parseTree, (node, parent) => {
@@ -47,20 +49,17 @@ const checkPknf = str => {
                 if (parent?.operator?.type === TOKENS.OR && node.operator.type !== TOKENS.OR) {
                     throw new NotKnfError('There should be only disjunctions after disjunctions')
                 }
-
-                // if ((parent?.operator?.type === TOKENS.AND && node.operator.type !== TOKENS.OR) || (node.operator.type === TOKENS.OR && !parent)) {
-                //     parentDisjunction = node;
-                //     if(!parentDisjunction.vars) parentDisjunction.vars = [];
-                //     // parentDisjunctions.push(parentDisjunction)
-                // }
                 if (parent?.operator?.type === TOKENS.AND) {
                     parentDisjunction = node;
                     if(!parentDisjunction.vars) parentDisjunction.vars = [];
                     parentDisjunctions.push(parentDisjunction)
                 }
+                if(node?.operator?.type === TOKENS.AND && node === parseTree.childs[0]) {
+                    if(!node?.childs[0]?.operator && !node?.childs[1]?.operator) throw new NotPknfError()
+                }
                 if(node.operator.type === TOKENS.OR) {
-                    node.childs[0].type === 'var' && parentDisjunction.vars.push(node.childs[0])
-                    node.childs[1].type === 'var' && parentDisjunction.vars.push(node.childs[1])
+                    node.childs[0].type === 'var' && parentDisjunction && parentDisjunction.vars.push(node.childs[0])
+                    node.childs[1].type === 'var' && parentDisjunction && parentDisjunction.vars.push(node.childs[1])
                 }
             } else if (node?.operator?.arity === ARITY.UNARY) {
                 if(node?.childs[0].type === 'formula') throw new NotKnfError('Negotiation to subformulas is not allowed')
@@ -72,19 +71,7 @@ const checkPknf = str => {
                     value: node.childs[0].value,
                     neg: true,
                 })
-                // parentDisjunctions.push(parentDisjunction)
             }
-            // else if (node?.type === 'var' && parent?.type !== TOKENS.NOT) {
-            //     if(!parentDisjunction) parentDisjunction = parent
-            //     if (!parentDisjunction?.vars) {
-            //         parentDisjunction.vars = []
-            //     }
-            //     parentDisjunction.vars.push({
-            //         type: node.type,
-            //         value: node.value,
-            //     })
-            //     // parentDisjunctions.push(parentDisjunction)
-            // }
         })
 
         const varsSet = new Set()
@@ -92,19 +79,15 @@ const checkPknf = str => {
         parentDisjunctions.forEach(d => {
             d.vars.forEach(v => varsSet.add(v.value))
         })
-        console.log(JSON.stringify(parentDisjunctions, (key, value) => key === 'parent' ? 'mock' : value))
+        // console.log(JSON.stringify(parentDisjunctions, (key, value) => key === 'parent' ? 'mock' : value))
         parentDisjunctions.filter(d => d.operator.type === TOKENS.OR).forEach(d1 => {
             if(new Set(d1.vars.map(v=>v.value)).size !== varsSet.size) {
-                // console.log(JSON.stringify(d1, (key, value) => key === 'parent' ? 'mock' : value))
-                console.log(d1.vars)
-                console.log(varsSet)
+                console.log('1' + d1.vars)
+                console.log('2' + varsSet)
                 throw new NotPknfError('Not all vars')
             }
 
             if(!checkUnique(d1.vars.map(d => d.value))) {
-                // console.log(checkUnique(d1.vars.map(d => d.value)))
-                // console.log(d1.vars.map(d => d.value).length)
-                // console.log(new Set(d1.vars.map(d => d.value)).size)
                 throw new NotPknfError('Not unique vars')
             }
 
@@ -122,9 +105,7 @@ const checkPknf = str => {
         // else
         throw err
     }
-
     // console.log(JSON.stringify(parseTree, (key, value) => key === 'parent' ? 'mock' : value))
-
     return true
 }
 

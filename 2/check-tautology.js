@@ -26,7 +26,6 @@ const checkTautology = str => {
             output: execute(getParseTree(), inputVector)
         })
     }
-
     return [truthTable.map(el => el.output).every(el => el === 1), truthTable]
 }
 

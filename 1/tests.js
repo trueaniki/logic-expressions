@@ -77,10 +77,34 @@ describe('Check pknf', () => {
         })
     })
     // 10
-    const formula10 = '(((!Z)\\/X)//\C)'
+    const formula10 = '(((!Z)\\/X)/\\C)'
     describe('10) ' + formula10, () => {
         it('should not be pknf', () => {
             assert.throws(() => checkPknf(formula10))
+        })
+    })
+    const formula11 = '((A\\/B)/\\((!A)\\/B))'
+    describe('11) ' + formula11, () => {
+        it('should be pknf', () => {
+            assert(checkPknf(formula11))
+        })
+    })
+    const formula12 = '(A\\/B)'
+    describe('12) ' + formula12, () => {
+        it('should be pknf', () => {
+            assert(checkPknf(formula12))
+        })
+    })
+    const formula13 = '(A/\\B)'
+    describe('13) ' + formula13, () => {
+        it('should not be pknf', () => {
+            assert.throws(() => checkPknf(formula13))
+        })
+    })
+    const formula14 = 'A'
+    describe('14) ' + formula14, () => {
+        it('should not be pknf', () => {
+            assert.throws(() => checkPknf(formula14))
         })
     })
 })

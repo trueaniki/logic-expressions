@@ -5,12 +5,12 @@
 const readline = require('readline-sync')
 const checkPknf = require('./check-pknf')
 
-// const str = readline.question('Enter formula:\n')
-const str = '(1\\/0)'
+const str = readline.question('Enter formula:\n')
+// const str = '((A\\/(B\\/C))/\\(((!C)\\/B)\\/A))'
 
-try {
+// try {
     console.log(checkPknf(str))
-} catch (e) {
-    console.log(false)
-    console.log(e.message)
-}
+// } catch (e) {
+//     console.log(false)
+    // console.log(e)
+// }

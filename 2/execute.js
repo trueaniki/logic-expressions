@@ -22,6 +22,7 @@ const {
 } = require('./functions')
 
 const execute = node => {
+    if(!node.operator) return node.value
     switch (node.operator.type) {
         case TOKENS.NOT:
             return not(node.childs[0].value)
