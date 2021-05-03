@@ -1,5 +1,13 @@
-// Created by Alexey Nikipelov
+// Общий код для лабораторных работ 1 и 2 по дисциплине ЛОИС
+// Выполнено студентом группы 821701 БГУИР Никипеловым Алексеем Дмитриевичем
+// Функция лексера
 
+/*!
+ * alphabet <https://github.com/jonschlinkert/alphabet>
+ *
+ * Copyright (c) 2014-2015, Jon Schlinkert.
+ * Licensed under the MIT license.
+ */
 const alphabet = require('alphabet')
 
 const {

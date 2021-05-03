@@ -1,4 +1,6 @@
-// Created by Alexey Nikipelov
+// Общий код для лабораторных работ 1 и 2 по дисциплине ЛОИС
+// Выполнено студентом группы 821701 БГУИР Никипеловым Алексеем Дмитриевичем
+// Классы ошибок обработки формул
 
 class UnexpectedSymbolError extends Error {
     constructor(symbol, index) {
