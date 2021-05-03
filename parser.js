@@ -45,7 +45,7 @@ const Parser = () => {
         }
     }
 
-    const getParseTree = () => parseTree
+    const getParseTree = () => clone(parseTree, true)
 
     return [parseToken, getParseTree]
 }
