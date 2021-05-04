@@ -20,7 +20,7 @@ const {
 } = require('./errors')
 
 const Parser = () => {
-    const parseTree = {}
+    const parseTree = {root: true}
 
     let pointer = parseTree
 
@@ -35,7 +35,7 @@ const Parser = () => {
         } else if (VARS.includes(token.type)) {
             if(!pointer.childs) pointer.childs = []
             if(pointer.childs.length === 2) throw new UnexpectedVariableError(token)
-            pointer.childs.push({type: 'var', value: token.value, const: token.type === TOKENS.CONST})
+            pointer.childs.push({type: 'var', value: token.value, const: token.type === TOKENS.CONST, parent: pointer})
 
         } else if (OPERATORS.includes(token.type)) {
             if (pointer.operator) throw new UnexpectedOperatorError(token)
