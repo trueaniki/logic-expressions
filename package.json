@@ -24,7 +24,9 @@
     "alphabet": "^1.0.0",
     "chai": "^4.3.4",
     "clone": "^2.1.2",
+    "deep-equal": "^2.0.5",
     "mocha": "^8.3.2",
+    "print-tree": "^0.1.5",
     "readline-sync": "^1.4.10"
   }
 }
