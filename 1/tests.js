@@ -10,7 +10,7 @@
 const {assert} = require('chai')
 
 const {NotKnfError, NotPknfError} = require('../errors')
-const checkPknf = require('./check-pknf')
+const checkPknf = require('./check-pknf2')
 
 describe('Check pknf', () => {
     // 1
@@ -45,42 +45,48 @@ describe('Check pknf', () => {
     const formula5 = '(((((!B)\\/C)/\\((A/\\B)\\/(!C)))/\\(((!A)\\/B)\\/(!C)))/\\((A\\/(!B))\\/(!C)))'
     describe('5) ' + formula5, () => {
         it('should not be pknf', () => {
-            assert.throws(() => checkPknf(formula5), NotKnfError)
+            assert.isNotOk(checkPknf(formula5))
         })
     })
     // 6
     const formula6 = '(((!A)\\/(B\\/C))/\\(C\\/((!A)\\/B)))'
     describe('6) ' + formula6, () => {
         it('should not be pknf', () => {
-            assert.throws(() => checkPknf(formula6), NotPknfError)
+            assert.isNotOk(checkPknf(formula6))
         })
     })
     // 7
     const formula7 = '(((((A\\/B)\\/C)\\/(!D))/\\((A\\/(B\\/(!C)))\\/D))/\\(((A\\/B)\\/C)\\/(!D)))'
     describe('7) ' + formula7, () => {
         it('should not be pknf', () => {
-            assert.throws(() => checkPknf(formula7), NotPknfError)
+            assert.isNotOk(checkPknf(formula7))
         })
     })
     // 8
     const formula8 = 'A/\\B)'
     describe('8) ' + formula8, () => {
         it('should throw Error: Wrong parenthesis', () => {
-            assert.throws(() => checkPknf(formula8))
+            assert.isNotOk(checkPknf(formula8))
         })
     })
     // 9
     const formula9 = '(AB)'
     describe('9) ' + formula9, () => {
         it('should throw lexer error', () => {
-            assert.throws(() => checkPknf(formula9))
+            assert.isNotOk(checkPknf(formula9))
         })
     })
     // 10
     const formula10 = '(((!Z)\\/X)//\C)'
     describe('10) ' + formula10, () => {
         it('should not be pknf', () => {
-            assert.throws(() => checkPknf(formula10))
+            assert.isNotOk(checkPknf(formula10))
+        })
+    })
+    const formula11 = '((X\\/(Y/\\X))/\\(X\\/(!(Y\\/X))))'
+    describe('11) ' + formula11, () => {
+        it('should not be pknf', () => {
+            assert.isNotOk(checkPknf(formula11))
         })
     })
 })
