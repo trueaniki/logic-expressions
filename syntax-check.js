@@ -10,6 +10,15 @@ const {
     OPERATORS,
 } = require('./grammar')
 
+const {
+    UnexpectedSymbolError,
+        IllegalCharacterError,
+        UnexpectedOperatorError,
+        UnexpectedVariableError,
+        NotKnfError,
+        NotPknfError
+} = require('./errors')
+
 const syntaxCheck = tokens => {
     const tokenTypes = tokens.map(t => t.type)
     let parenCounter = 0
@@ -17,19 +26,19 @@ const syntaxCheck = tokens => {
         if(index !== tokenArr.length - 1) {
             const nextToken = tokenArr[index + 1]
             if(token === TOKENS.LPAREN) {
-                if(!VARS.includes(nextToken) && nextToken !== TOKENS.LPAREN && !UNARY_OPERATORS.includes(nextToken)) throw new UnexpectedSymbolError(tokenArr[index + 1], index + 1)
+                if(!VARS.includes(nextToken) && nextToken !== TOKENS.LPAREN && !UNARY_OPERATORS.includes(nextToken)) throw new UnexpectedSymbolError()
             }
             if(token === TOKENS.SYMBOL) {
-                if(OPERATORS.includes(nextToken) && nextToken === TOKENS.RPAREN) throw new UnexpectedSymbolError(tokenArr[index + 1], index + 1)
+                if(OPERATORS.includes(nextToken) && nextToken === TOKENS.RPAREN) throw new UnexpectedSymbolError()
             }
             if(token === TOKENS.SYMBOL) {
-                if(nextToken === TOKENS.SYMBOL) throw new UnexpectedSymbolError(tokenArr[index + 1], index + 1)
+                if(nextToken === TOKENS.SYMBOL) throw new UnexpectedSymbolError()
             }
             if(OPERATORS.includes(token)) {
-                if(!VARS.includes(nextToken) && nextToken !== TOKENS.LPAREN) throw new UnexpectedSymbolError(tokenArr[index + 1], index + 1)
+                if(!VARS.includes(nextToken) && nextToken !== TOKENS.LPAREN) throw new UnexpectedSymbolError()
             }
             if(token === TOKENS.RPAREN) {
-                if(!OPERATORS.includes(nextToken) && nextToken !== TOKENS.RPAREN) throw new UnexpectedSymbolError(tokenArr[index + 1], index + 1)
+                if(!OPERATORS.includes(nextToken) && nextToken !== TOKENS.RPAREN) throw new UnexpectedSymbolError()
             }
         }
         if(token === TOKENS.LPAREN) parenCounter++
