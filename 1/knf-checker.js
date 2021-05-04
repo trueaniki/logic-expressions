@@ -10,6 +10,7 @@ const {NotKnfError} = require('../errors')
 const KnfChecker = Visitor()
 
 KnfChecker.any(node => {
+    if(node.const) throw NotKnfError()
     if (node.operator?.type === TOKENS.IMPL || node.operator?.type === TOKENS.EQ) {
         throw new NotKnfError('Implication and equation are not allowed')
     }
