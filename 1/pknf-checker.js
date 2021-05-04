@@ -69,6 +69,7 @@ PknfChecker.variable((v,ctx) => {
 })
 
 PknfChecker.after(ctx => {
+    if(ctx.rootDisjunctions.length === 0 && ctx.visiting.childs[0].type !== 'var') throw new NotPknfError()
     // console.log(rootDisjunctions)
     // console.log(rootDisjunctions.map(d => d.map(v => `${v.neg ? '!' : ''}${v.value}`)))
     if (!checkUniqueVariables(ctx.rootDisjunctions)) throw new NotPknfError()
