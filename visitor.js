@@ -25,6 +25,7 @@ const Visitor = () => {
     const ctx = {}
 
     const run = (formulaTree) => {
+        ctx.visiting = formulaTree
         beforeCb && beforeCb(ctx)
         preOrderTraversal(formulaTree, (node) => {
             anyCb && anyCb(node, ctx)
