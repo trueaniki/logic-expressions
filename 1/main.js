@@ -3,10 +3,12 @@
 // Точка входа
 
 const readline = require('readline-sync')
-const checkPknf = require('./check-pknf')
+const printTree = require('print-tree')
+const checkPknf = require('./check-pknf2')
 
-// const str = readline.question('Enter formula:\n')
-const str = '(1\\/0)'
+
+const str = readline.question('Enter formula:\n')
+// const str = '(1\\/0)'
 
 try {
     console.log(checkPknf(str))
