@@ -26,9 +26,23 @@ class UnexpectedVariableError extends Error {
     }
 }
 
+class NotKnfError extends Error {
+    constructor(...args) {
+        super(...args)
+    }
+}
+
+class NotPknfError extends Error {
+    constructor(...args) {
+        super(...args)
+    }
+}
+
 module.exports = {
     UnexpectedSymbolError,
     IllegalCharacterError,
     UnexpectedOperatorError,
     UnexpectedVariableError,
+    NotKnfError,
+    NotPknfError
 }
